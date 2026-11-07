@@ -759,6 +759,31 @@
       if (f) setBlob(f);
     };
 
+    const staticHost = location.hostname.endsWith('github.io');
+    const backendUnavailableMessage = staticHost
+      ? 'This GitHub Pages version is a static preview and cannot create or load greetings. Open the local server or deploy the full backend version.'
+      : 'The greeting service returned an invalid response. Please check that the backend is running.';
+
+    async function readJsonResponse(response, fallbackMessage) {
+      const text = await response.text();
+      let data = null;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(/^\s*</.test(text) || response.headers.get('content-type')?.includes('text/html')
+          ? backendUnavailableMessage
+          : fallbackMessage);
+      }
+      if (!response.ok) throw new Error(data?.error || fallbackMessage);
+      return data;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[char]));
+    }
+
     $('create').onclick = async () => {
       const fd = new FormData();
       ['sender', 'receiver', 'message'].forEach(k => fd.append(k, $(k).value));
@@ -769,8 +794,7 @@
       $('err').classList.add('hidden');
       try {
         const r = await fetch('/api/greetings', { method: 'POST', body: fd });
-        const d = await r.json();
-        if (!r.ok) throw new Error(d.error || 'Failed to create greeting');
+        const d = await readJsonResponse(r, 'Failed to create greeting.');
         const url = location.origin + d.url;
         $('link').value = url;
         $('open').href = d.url;
@@ -799,11 +823,7 @@
     async function loadGreeting(id) {
       try {
         const r = await fetch('/api/greetings/' + id);
-        if (!r.ok) {
-          document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center text-center p-6"><div class="p-8 rounded-2xl bg-white/5 border border-white/10"><p class="text-xl text-yellow-500 mb-2">🪔 Greeting Not Found</p><p class="text-sm text-gray-400 mb-4">This greeting link may be expired or incorrect.</p><a href="/" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black text-xs font-semibold">Create a New Greeting</a></div></div>';
-          return;
-        }
-        const g = await r.json();
+        const g = await readJsonResponse(r, 'This greeting link may be expired or incorrect.');
         $('dr').textContent = g.receiver;
         $('dm').textContent = g.message;
         $('ds').textContent = g.sender;
@@ -840,7 +860,7 @@
         };
 
       } catch (e) {
-        document.body.innerHTML = '<p class="text-center mt-20 text-red-400">Failed to load greeting.</p>';
+        document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center text-center p-6"><div class="p-8 rounded-2xl bg-white/5 border border-white/10"><p class="text-xl text-yellow-500 mb-2">🪔 Unable to Load Greeting</p><p class="text-sm text-gray-400 mb-4">' + escapeHtml(e.message) + '</p><a href="/" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black text-xs font-semibold">Create a New Greeting</a></div></div>';
       }
     }
 

@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "path": "/", "title": "Create a Diwali Greeting" },
+    { "path": "/g/:id", "title": "Diwali Greeting" }
+  ]
+}

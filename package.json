@@ -1,0 +1,16 @@
+{
+  "name": "diwali-greeting",
+  "version": "1.1.1",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0",
+    "@netlify/functions": "^3.0.0",
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2",
+    "multer": "^2.0.2"
+  }
+}

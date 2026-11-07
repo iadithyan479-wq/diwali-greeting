@@ -1,0 +1,26 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/g/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/greetings"
+  to = "/.netlify/functions/greetings"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/greetings/*"
+  to = "/.netlify/functions/greetings"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/uploads/*"
+  to = "/.netlify/functions/uploads"
+  status = 200
+  force = true

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diwali Greeting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0d0b07;
+      color: #fff;
+      margin: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    .pf { font-family: 'Playfair Display', serif; }
+    .gi {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      transition: all 0.3s ease;
+    }
+    .gi:focus {
+      border-color: #D4AF37;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+      outline: none;
+    }
+    .gold {
+      background: linear-gradient(90deg, #D4AF37, #FFF5B8, #D4AF37);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .gold-border {
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+    
+    /* Diya Styles */
+    .diya {
+      position: relative;
+      width: 130px;
+      height: 90px;
+      margin: 0 auto;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+    .diya:hover {
+      transform: scale(1.05);
+    }
+    .bowl {
+      position: absolute;
+      bottom: 0;
+      left: 15px;
+      width: 100px;
+      height: 48px;
+      background: linear-gradient(135deg, #E6A117, #8B5704, #502E00);
+      border-radius: 0 0 50px 50px;
+      box-shadow: inset -5px -5px 15px rgba(0,0,0,0.7), 0 10px 25px rgba(0,0,0,0.8);
+      border-bottom: 2px solid #D4AF37;
+    }
+    .rim {
+      position: absolute;
+      bottom: 44px;
+      left: 10px;
+      width: 110px;
+      height: 12px;
+      background: linear-gradient(90deg, #FFD700, #B8860B, #FFF5B8, #B8860B);
+      border-radius: 50%;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .fw {
+      position: absolute;
+      bottom: 48px;
+      left: 53px;
+      transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease;
+      transform-origin: bottom center;
+      opacity: 0;
+      transform: scale(0.1);
+      z-index: 3;
+    }
+    .fl {
+      width: 26px;
+      height: 26px;
+      background: radial-gradient(circle at 50% 60%, #FFF, #FFD700 40%, #FF4500 80%);
+      border-radius: 50% 0 50% 50%;
+      transform: rotate(-45deg);
+      box-shadow: 0 0 20px #FFD700, 0 0 40px #FF8C00, 0 0 70px #FF4500;
+      animation: fk 1.8s infinite alternate ease-in-out;
+      transition: all 0.5s ease;
+    }
+    .is-lit .fw {
+      opacity: 1;
+      transform: scale(1.6);
+    }
+    .is-lit .fl {
+      background: radial-gradient(circle at 40% 50%, #FFFFEE, #FFF099 30%, #FF8C00 70%, #FF2200 95%);
+      box-shadow: 0 0 35px #FFD700, 0 0 75px #FF8C00, 0 0 120px #FF4500, 0 0 180px rgba(255, 140, 0, 0.4);
+    }
+    @keyframes fk {
+      0% { transform: rotate(-45deg) scale(0.92) skewX(2deg); }
+      50% { transform: rotate(-47deg) scale(1.06) skewY(-2deg); }
+      100% { transform: rotate(-43deg) scale(0.96) skewX(-1deg); }
+    }
+    
+    /* Background Ambience */
+    #bg {
+      background: radial-gradient(circle at center 40%, rgba(212, 175, 55, 0.12), #151109 60%, #0a0805 100%);
+      opacity: 0.35;
+      transition: opacity 2s ease;
+    }
+    .is-lit #bg {
+      opacity: 1;
+      background: radial-gradient(circle at center 35%, rgba(255, 190, 60, 0.28), rgba(60, 30, 5, 0.8) 55%, #0d0a06 100%);
+    }
+
+    /* Pulse Glow Button for Lighting Diya */
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.4), 0 0 30px rgba(255, 140, 0, 0.2);
+        transform: translateY(0);
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.8), 0 0 50px rgba(255, 140, 0, 0.5);
+        transform: translateY(-2px);
+      }
+    }
+    .ignite-pulse {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    /* Wish Suggestion Pills */
+    .wish-pill {
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      color: #F1D78A;
+      transition: all 0.2s ease;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+    .wish-pill:hover {
+      background: rgba(212, 175, 55, 0.25);
+      border-color: #D4AF37;
+      color: #FFF;
+      transform: translateY(-1px);
+    }
+    
+    /* Smooth Reveal Transitions */
+    .fade-up-enter {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Floating Action Badges */
+    .fab-btn {
+      background: rgba(20, 16, 12, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: #E6C200;
+      transition: all 0.2s ease;
+    }
+    .fab-btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: #D4AF37;
+      color: #FFF;
+      transform: scale(1.05);
+    }
+    .fab-btn.active {
+      background: #D4AF37;
+      color: #0d0b07;
+      border-color: #FFF;
+      font-weight: 600;
+    }
+
+    /* Decorative Rangoli Pattern in Background */
+    .rangoli-ring {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px dashed rgba(212, 175, 55, 0.18);
+      pointer-events: none;
+      animation: rotateRing 80s linear infinite;
+    }
+    .rangoli-ring:before {
+      content: '';
+      position: absolute;
+      inset: 15px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+    @keyframes rotateRing {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Audio & Utility Controls (Greeting View) -->
+  <div id="greetingControls" class="fixed top-4 right-4 z-40 flex flex-wrap gap-2 hidden">
+    <button id="btnSoundToggle" class="fab-btn px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg" title="Toggle Sound Effects">
+      <span id="soundIcon">🔊</span> <span class="hidden sm:inline">Sounds</span>
+    </button>
+    <button id="btnMusicToggle" class="fab-btn px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg" title="Toggle Ambient Sitar & Drone Music">
+      <span id="musicIcon">🎵</span> <span class="hidden sm:inline">Music</span>
+    </button>
+    <button id="btnDownloadCard" class="fab-btn px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg" title="Save this Greeting as an Image">
+      <span>📸</span> <span class="hidden sm:inline">Save Card</span>
+    </button>
+  </div>
+
+  <!-- Setup Section (Creator Mode) -->
+  <section id="setup" class="min-h-screen flex items-center justify-center p-4 sm:p-6 hidden relative z-10">
+    <div class="w-full max-w-xl bg-black/40 backdrop-blur-md p-6 sm:p-8 rounded-3xl border border-[#D4AF37]/30 shadow-2xl relative">
+      <div class="text-center mb-6">
+        <span class="text-3xl">🪔</span>
+        <h2 class="pf text-3xl sm:text-4xl gold font-semibold mt-2">Craft Your Diwali Greeting</h2>
+        <p class="text-xs sm:text-sm text-gray-400 mt-1">Light up someone's festival with a personalized keepsake</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="text-xs uppercase tracking-wider text-[#D4AF37] font-medium">Your Name (Sender)</label>
+          <input id="sender" placeholder="e.g. Aarav Sharma" maxlength="60" class="gi w-full px-4 py-3 rounded-xl mt-1 text-sm">
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wider text-[#D4AF37] font-medium">Recipient Name</label>
+          <input id="receiver" placeholder="e.g. Ananya Patel" maxlength="60" class="gi w-full px-4 py-3 rounded-xl mt-1 text-sm">
+        </div>
+      </div>
+
+      <!-- Quick Wish Suggestions -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs uppercase tracking-wider text-[#D4AF37] font-medium">Heartfelt Message</label>
+          <span class="text-[11px] text-gray-400">✨ Tap a topic for instant wishes</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mb-2.5">
+          <button type="button" class="wish-pill" data-cat="family">🌟 Family & Warmth</button>
+          <button type="button" class="wish-pill" data-cat="traditional">🪔 Traditional Blessings</button>
+          <button type="button" class="wish-pill" data-cat="friends">🎉 Friends & Joy</button>
+          <button type="button" class="wish-pill" data-cat="formal">💼 Professional</button>
+          <button type="button" class="wish-pill" data-cat="short">💫 Short & Sweet</button>
+        </div>
+        <textarea id="message" rows="4" maxlength="600" class="gi w-full px-4 py-3 rounded-xl text-sm leading-relaxed resize-none" placeholder="Write your warm wishes here...">May the divine light of the diyas illumine your path with joy, good health, and abundant prosperity. Wishing you and your loved ones a blessed and vibrant Diwali!</textarea>
+      </div>
+
+      <!-- Voice Note Section -->
+      <div class="p-4 rounded-2xl border border-white/10 bg-black/30 mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs uppercase tracking-wider text-[#D4AF37] font-medium">🎙️ Voice Note (Optional)</p>
+          <span class="text-[11px] text-gray-400">Up to 10MB</span>
+        </div>
+        <div class="flex flex-wrap gap-2.5 items-center">
+          <button id="rec" type="button" class="px-4 py-2 rounded-xl bg-red-950/60 text-red-300 border border-red-800/60 text-xs hover:bg-red-900/50 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Record Voice
+          </button>
+          <button id="stop" type="button" class="hidden px-4 py-2 rounded-xl bg-gray-800 text-yellow-300 border border-gray-700 text-xs">
+            ⏹ Stop Recording
+          </button>
+          <span class="text-xs text-gray-500">or</span>
+          <input type="file" id="up" accept="audio/*" class="text-xs text-gray-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-white/10 file:text-yellow-200 hover:file:bg-white/20">
+        </div>
+        <audio id="prev" controls class="hidden w-full mt-3"></audio>
+      </div>
+
+      <button id="create" class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#E6C200] via-[#D4AF37] to-[#B8860B] text-black font-semibold text-base tracking-wide hover:brightness-110 active:scale-[0.99] transition shadow-xl">
+        ✨ Create Greeting Link
+      </button>
+
+      <p id="err" class="text-red-400 text-sm mt-3 text-center hidden"></p>
+
+      <!-- Share Box -->
+      <div id="share" class="hidden mt-6 p-5 rounded-2xl border border-[#D4AF37]/50 bg-black/50 text-center space-y-3">
+        <p class="text-xs uppercase tracking-wider text-[#D4AF37]">🎉 Your Greeting Link is Ready!</p>
+        <input id="link" readonly class="gi w-full px-4 py-2.5 rounded-xl text-xs text-center font-mono select-all">
+        <div class="flex flex-wrap gap-2 justify-center">
+          <button id="copy" class="px-4 py-2 rounded-xl bg-gray-800 border border-gray-700 text-xs hover:bg-gray-700">📋 Copy Link</button>
+          <a id="wa" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-800 border border-emerald-700 text-xs hover:bg-emerald-700">💬 WhatsApp</a>
+          <a id="open" class="px-4 py-2 rounded-xl bg-[#D4AF37] text-black font-medium text-xs hover:bg-yellow-400">👁️ Preview Greeting</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Greeting Display Section (Recipient View) -->
+  <section id="greet" class="min-h-screen hidden relative flex flex-col items-center justify-center px-4 py-12 select-none overflow-hidden">
+    <div id="bg" class="absolute inset-0 pointer-events-none"></div>
+    <canvas id="cv" class="absolute inset-0 pointer-events-none z-10"></canvas>
+
+    <main class="relative z-20 flex flex-col items-center text-center max-w-2xl w-full">
+      
+      <!-- Interactive Diya Component -->
+      <div id="scene" class="relative my-4">
+        <div class="rangoli-ring"></div>
+        <div class="diya" id="diyaTarget" title="Click to light the Diya!">
+          <div class="fw"><div class="fl"></div></div>
+          <div class="rim"></div>
+          <div class="bowl"></div>
+        </div>
+      </div>
+
+      <!-- Ceremony Prompt / Unlit State -->
+      <div id="ceremonyPrompt" class="my-4 transition-all duration-700">
+        <button id="btnIgnite" class="ignite-pulse px-8 py-3.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#FF8C00] text-black font-semibold text-sm sm:text-base tracking-wide flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition">
+          <span>✨</span> Tap to Light the Sacred Diya <span>🪔</span>
+        </button>
+        <p class="text-xs text-[#D4AF37]/80 mt-2.5">Click to awaken the festival of lights</p>
+      </div>
+
+      <!-- Greeting Body (Revealed after lighting) -->
+      <div id="greetingContent" class="fade-up-enter mt-2 w-full">
+        <h1 class="pf text-4xl sm:text-6xl md:text-7xl font-semibold gold leading-tight">
+          Happy Diwali,<br>
+          <span id="dr" class="text-white drop-shadow-[0_0_20px_rgba(255,215,0,0.6)]"></span>!
+        </h1>
+
+        <p id="dm" class="text-base sm:text-xl text-gray-200 font-light leading-relaxed whitespace-pre-line py-6 px-4 max-w-xl mx-auto"></p>
+
+        <p class="pf italic text-lg sm:text-2xl text-[#D4AF37] mb-6">
+          With love,<br>
+          <span id="ds" class="font-semibold not-italic text-white text-xl sm:text-3xl"></span>
+        </p>
+
+        <!-- Audio Player if voice note present -->
+        <div id="audioWrapper" class="hidden mb-8 flex justify-center">
+          <div class="p-3 rounded-2xl bg-black/60 border border-[#D4AF37]/30 flex items-center gap-3">
+            <span class="text-xl">🎙️</span>
+            <audio id="fa" controls class="h-9 w-60 sm:w-72"></audio>
+          </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex flex-wrap gap-3 justify-center items-center mt-4">
+          <button id="light" class="px-8 py-3 rounded-full border border-[#D4AF37]/70 text-[#FFD700] bg-black/40 backdrop-blur-sm tracking-widest uppercase text-xs font-semibold hover:bg-[#D4AF37]/20 transition flex items-center gap-2">
+            <span>🎆</span> Light the Sky
+          </button>
+          <button id="btnRelight" class="px-6 py-3 rounded-full border border-white/20 text-gray-300 bg-black/40 backdrop-blur-sm text-xs hover:bg-white/10 transition">
+            🪔 Re-light Diya
+          </button>
+        </div>
+
+        <!-- Hint message -->
+        <p class="text-[11px] text-gray-400 mt-5">✨ Click or tap anywhere in the sky to burst fireworks ✨</p>
+
+        <!-- Send Back / Create New Greeting Link -->
+        <div class="mt-12 pt-6 border-t border-white/10">
+          <a href="/" class="text-xs text-[#D4AF37] hover:underline flex items-center justify-center gap-1.5 opacity-80 hover:opacity-100">
+            <span>💌</span> Create & Send Your Own Diwali Greeting
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <!-- Hidden Canvas for Exporting High-Res Greeting Card Image -->
+  <canvas id="cardCanvas" width="1080" height="1350" class="hidden"></canvas>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    /* ----------------------------------------------------
+       Festive Wish Suggestions
+    ---------------------------------------------------- */
+    const WISHES = {
+      family: [
+        "May the supreme light of Diwali illumine your home with prosperity, joy, and peace. Wishing you and your family a blessed Deepavali!",
+        "May Goddess Lakshmi bless your household with abundance, health, and everlasting joy. Happy Diwali to you and all at home!",
+        "Diwali is a festival of gratitude, warmth, and togetherness. Sending endless love and warmest wishes to your wonderful family!"
+      ],
+      traditional: [
+        "Tamaso ma jyotir gamaya — May you be led from darkness unto light, from ignorance unto wisdom. Wishing you a serene and auspicious Shubh Deepavali!",
+        "May the sacred light of the diyas dispel all shadows, guide your steps with wisdom, and bring timeless peace to your heart.",
+        "On this sacred festival of lights, may divine grace brighten every corner of your life with auspicious blessings and harmony."
+      ],
+      friends: [
+        "Wishing you endless boxes of sweets, sparkling laughter, and memories that shine all year long! Have a spectacular Diwali, my friend!",
+        "May your Diwali be as bright, loud, and full of joy as a sky full of fireworks! Have an unforgettable celebration!",
+        "Shine bright, eat all the laddoos, and light up the world! Wishing you tons of love, laughs, and good times this Diwali!"
+      ],
+      formal: [
+        "Wishing you and your esteemed organization a joyous, prosperous, and successful Diwali. May the year ahead bring new achievements.",
+        "May the auspicious festival of lights illuminate your path toward continuous innovation, peace, and sustained prosperity. Happy Diwali!",
+        "Warm greetings on the occasion of Deepavali. Wishing you, your family, and your team continued health, happiness, and success."
+      ],
+      short: [
+        "Light over darkness, hope over despair, joy all around. Happy Diwali!",
+        "May your year shine as brightly as the golden diyas. Shubh Deepavali!",
+        "Wishing you infinite light, warmth, and boundless prosperity today and always!"
+      ]
+    };
+
+    const wishIndices = { family: 0, traditional: 0, friends: 0, formal: 0, short: 0 };
+    document.querySelectorAll('.wish-pill').forEach(btn => {
+      btn.onclick = () => {
+        const cat = btn.getAttribute('data-cat');
+        const list = WISHES[cat];
+        $('message').value = list[wishIndices[cat] % list.length];
+        wishIndices[cat]++;
+        // Visual feedback flash
+        $('message').classList.add('border-[#D4AF37]');
+        setTimeout(() => $('message').classList.remove('border-[#D4AF37]'), 350);
+      };
+    });
+
+    /* ----------------------------------------------------
+       Web Audio API Sound Engine (Zero external audio assets)
+    ---------------------------------------------------- */
+    let audioCtx = null;
+    let soundEnabled = true;
+    let musicEnabled = true;
+    let musicGainNode = null;
+    let melodyTimer = null;
+    let droneOscs = [];
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Firework Boom & Crackle
+    function playFireworkSound() {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        // Sub-bass Thump + Filtered Noise
+        const bufferSize = audioCtx.sampleRate * 0.7;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.15));
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(650, now);
+        filter.frequency.exponentialRampToValueAtTime(80, now + 0.5);
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.65, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        noise.start(now);
+
+        // Crackles
+        const crackleCount = Math.floor(Math.random() * 4) + 2;
+        for (let c = 0; c < crackleCount; c++) {
+          setTimeout(() => {
+            if (!soundEnabled || !audioCtx) return;
+            const cNow = audioCtx.currentTime;
+            const cBufSize = Math.floor(audioCtx.sampleRate * 0.035);
+            const cBuf = audioCtx.createBuffer(1, cBufSize, audioCtx.sampleRate);
+            const cData = cBuf.getChannelData(0);
+            for (let i = 0; i < cBufSize; i++) cData[i] = Math.random() * 2 - 1;
+            const cNoise = audioCtx.createBufferSource();
+            cNoise.buffer = cBuf;
+            const cFilter = audioCtx.createBiquadFilter();
+            cFilter.type = 'highpass';
+            cFilter.frequency.value = 1800;
+            const cGain = audioCtx.createGain();
+            cGain.gain.setValueAtTime(0.3, cNow);
+            cGain.gain.exponentialRampToValueAtTime(0.001, cNow + 0.03);
+            cNoise.connect(cFilter);
+            cFilter.connect(cGain);
+            cGain.connect(audioCtx.destination);
+            cNoise.start(cNow);
+          }, 80 + Math.random() * 320);
+        }
+      } catch (e) {
+        // AudioContext restricted before gesture
+      }
+    }
+
+    // Diya Ignition Chime & Whoosh
+    function playIgniteSound() {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        // Warm whoosh
+        const bSize = Math.floor(audioCtx.sampleRate * 0.45);
+        const b = audioCtx.createBuffer(1, bSize, audioCtx.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < bSize; i++) d[i] = Math.random() * 2 - 1;
+        const src = audioCtx.createBufferSource();
+        src.buffer = b;
+        const flt = audioCtx.createBiquadFilter();
+        flt.type = 'bandpass';
+        flt.frequency.setValueAtTime(320, now);
+        flt.frequency.exponentialRampToValueAtTime(1400, now + 0.4);
+        const gn = audioCtx.createGain();
+        gn.gain.setValueAtTime(0.01, now);
+        gn.gain.linearRampToValueAtTime(0.35, now + 0.12);
+        gn.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        src.connect(flt);
+        flt.connect(gn);
+        gn.connect(audioCtx.destination);
+        src.start(now);
+
+        // Golden Bell Chimes (Harmonic pentatonic flourish)
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + 0.15 + i * 0.08);
+          g.gain.setValueAtTime(0.16, now + 0.15 + i * 0.08);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.85 + i * 0.08);
+          osc.connect(g);
+          g.connect(audioCtx.destination);
+          osc.start(now + 0.15 + i * 0.08);
+          osc.stop(now + 1.1 + i * 0.08);
+        });
+      } catch (e) {}
+    }
+
+    // Ambient Indian Classical Drone (Tanpura & Gentle Plucks)
+    function startAmbientMusic() {
+      if (!musicEnabled) return;
+      try {
+        initAudio();
+        if (musicGainNode) return;
+
+        musicGainNode = audioCtx.createGain();
+        musicGainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        musicGainNode.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 3);
+        musicGainNode.connect(audioCtx.destination);
+
+        // Tanpura Drone (C# root: Sa, Pa, high Sa)
+        const dronePitches = [138.59, 139.1, 207.65, 277.18];
+        droneOscs = dronePitches.map(pitch => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = pitch;
+          g.gain.value = 0.04;
+          osc.connect(g);
+          g.connect(musicGainNode);
+          osc.start();
+          return osc;
+        });
+
+        // Gentle Pentatonic Melodic Plucks (Raga Bhupali)
+        const ragNotes = [277.18, 311.13, 369.99, 415.30, 466.16, 554.37];
+        melodyTimer = setInterval(() => {
+          if (!musicEnabled || !musicGainNode || !audioCtx) return;
+          const note = ragNotes[Math.floor(Math.random() * ragNotes.length)];
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          const now = audioCtx.currentTime;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(note, now);
+          g.gain.setValueAtTime(0.035, now);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+          osc.connect(g);
+          g.connect(musicGainNode);
+          osc.start(now);
+          osc.stop(now + 2.5);
+        }, 1900);
+      } catch (e) {}
+    }
+
+    function stopAmbientMusic() {
+      if (melodyTimer) { clearInterval(melodyTimer); melodyTimer = null; }
+      droneOscs.forEach(o => { try { o.stop(); } catch(e){} });
+      droneOscs = [];
+      if (musicGainNode) {
+        try { musicGainNode.disconnect(); } catch(e){}
+        musicGainNode = null;
+      }
+    }
+
+    // Toggle Controls
+    $('btnSoundToggle').onclick = () => {
+      soundEnabled = !soundEnabled;
+      $('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+      $('btnSoundToggle').classList.toggle('active', soundEnabled);
+    };
+
+    $('btnMusicToggle').onclick = () => {
+      musicEnabled = !musicEnabled;
+      $('musicIcon').textContent = musicEnabled ? '🎵' : '🔇';
+      $('btnMusicToggle').classList.toggle('active', musicEnabled);
+      if (musicEnabled) {
+        startAmbientMusic();
+      } else {
+        stopAmbientMusic();
+      }
+    };
+
+    /* ----------------------------------------------------
+       Export Greeting Card as PNG Image
+    ---------------------------------------------------- */
+    $('btnDownloadCard').onclick = () => {
+      const cv = $('cardCanvas');
+      const ctx = cv.getContext('2d');
+      const W = cv.width, H = cv.height;
+
+      // Dark Luxury Background
+      const bgGrad = ctx.createRadialGradient(W/2, H*0.4, 80, W/2, H/2, W*0.8);
+      bgGrad.addColorStop(0, '#2d1b03');
+      bgGrad.addColorStop(0.5, '#140f06');
+      bgGrad.addColorStop(1, '#090704');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Gold Filigree Border
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(40, 40, W - 80, H - 80);
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(55, 55, W - 110, H - 110);
+
+      // Corner Accents
+      const corners = [[60, 60], [W - 60, 60], [60, H - 60], [W - 60, H - 60]];
+      ctx.fillStyle = '#FFD700';
+      corners.forEach(([cx, cy]) => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Decorative Top Emblem / Diya Icon
+      ctx.font = '72px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🪔', W / 2, 180);
+
+      // Title
+      ctx.font = 'bold 64px "Playfair Display", serif';
+      const goldGrad = ctx.createLinearGradient(W/2 - 250, 0, W/2 + 250, 0);
+      goldGrad.addColorStop(0, '#D4AF37');
+      goldGrad.addColorStop(0.5, '#FFF8DC');
+      goldGrad.addColorStop(1, '#B8860B');
+      ctx.fillStyle = goldGrad;
+      ctx.fillText('HAPPY DIWALI', W / 2, 270);
+
+      // Recipient
+      const receiverName = $('dr').textContent || 'Dear One';
+      ctx.font = 'italic 52px "Playfair Display", serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(receiverName, W / 2, 350);
+
+      // Message (with word wrapping)
+      ctx.font = '32px "Inter", sans-serif';
+      ctx.fillStyle = '#E5E7EB';
+      const msg = $('dm').textContent || 'Wishing you a joyful and prosperous Diwali!';
+      const words = msg.split(' ');
+      let line = '';
+      let y = 470;
+      const maxWidth = W - 220;
+      const lineHeight = 50;
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line.trim(), W / 2, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), W / 2, y);
+
+      // Sender Sign-off
+      const senderName = $('ds').textContent || 'Someone who cares';
+      y += 120;
+      ctx.font = 'italic 34px "Playfair Display", serif';
+      ctx.fillStyle = '#D4AF37';
+      ctx.fillText('With warmest love,', W / 2, y);
+      y += 55;
+      ctx.font = 'bold 42px "Playfair Display", serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(senderName, W / 2, y);
+
+      // Footer
+      ctx.font = '22px "Inter", sans-serif';
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
+      ctx.fillText('✨ Deepavali Greetings ✨', W / 2, H - 90);
+
+      // Trigger Download
+      const link = document.createElement('a');
+      link.download = `Diwali_Greeting_${receiverName.replace(/\s+/g, '_')}.png`;
+      link.href = cv.toDataURL('image/png');
+      link.click();
+    };
+
+    /* ----------------------------------------------------
+       Routing & Initialization
+    ---------------------------------------------------- */
+    let blob = null, mr, chunks = [];
+    const m = location.pathname.match(/^\/g\/([\w-]+)$/);
+    if (m) {
+      loadGreeting(m[1]);
+    } else {
+      $('setup').classList.remove('hidden');
+    }
+
+    /* ----------------------------------------------------
+       Creator Flow
+    ---------------------------------------------------- */
+    function setBlob(b) {
+      blob = b;
+      $('prev').src = URL.createObjectURL(b);
+      $('prev').classList.remove('hidden');
+    }
+
+    $('rec').onclick = async () => {
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mr = new MediaRecorder(s);
+        chunks = [];
+        mr.ondataavailable = e => e.data.size && chunks.push(e.data);
+        mr.onstop = () => {
+          setBlob(new Blob(chunks, { type: mr.mimeType || 'audio/webm' }));
+          s.getTracks().forEach(t => t.stop());
+          $('rec').classList.remove('hidden');
+          $('stop').classList.add('hidden');
+          $('rec').innerHTML = '<span>🔄</span> Re-record';
+        };
+        mr.start();
+        $('rec').classList.add('hidden');
+        $('stop').classList.remove('hidden');
+      } catch {
+        alert('Microphone unavailable. You can upload an audio file instead.');
+      }
+    };
+
+    $('stop').onclick = () => mr && mr.state !== 'inactive' && mr.stop();
+    $('up').onchange = e => {
+      const f = e.target.files[0];
+      if (f) setBlob(f);
+    };
+
+    $('create').onclick = async () => {
+      const fd = new FormData();
+      ['sender', 'receiver', 'message'].forEach(k => fd.append(k, $(k).value));
+      if (blob) {
+        fd.append('audio', blob, 'voice.' + (blob.type.includes('mp4') ? 'm4a' : blob.type.includes('mpeg') ? 'mp3' : 'webm'));
+      }
+      $('create').disabled = true;
+      $('err').classList.add('hidden');
+      try {
+        const r = await fetch('/api/greetings', { method: 'POST', body: fd });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Failed to create greeting');
+        const url = location.origin + d.url;
+        $('link').value = url;
+        $('open').href = d.url;
+        $('wa').href = 'https://wa.me/?text=' + encodeURIComponent('🪔 Happy Diwali! I created a special greeting for you: ' + url);
+        $('share').classList.remove('hidden');
+        $('share').scrollIntoView({ behavior: 'smooth' });
+      } catch (e) {
+        $('err').textContent = e.message;
+        $('err').classList.remove('hidden');
+      }
+      $('create').disabled = false;
+    };
+
+    $('copy').onclick = () => {
+      navigator.clipboard.writeText($('link').value);
+      $('copy').textContent = '✅ Copied!';
+      setTimeout(() => { $('copy').textContent = '📋 Copy Link'; }, 2000);
+    };
+
+    /* ----------------------------------------------------
+       Greeting View & Interactive Lighting Ceremony
+    ---------------------------------------------------- */
+    let greetingLoaded = false;
+    let isDiyaLit = false;
+
+    async function loadGreeting(id) {
+      try {
+        const r = await fetch('/api/greetings/' + id);
+        if (!r.ok) {
+          document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center text-center p-6"><div class="p-8 rounded-2xl bg-white/5 border border-white/10"><p class="text-xl text-yellow-500 mb-2">🪔 Greeting Not Found</p><p class="text-sm text-gray-400 mb-4">This greeting link may be expired or incorrect.</p><a href="/" class="px-5 py-2.5 rounded-xl bg-[#D4AF37] text-black text-xs font-semibold">Create a New Greeting</a></div></div>';
+          return;
+        }
+        const g = await r.json();
+        $('dr').textContent = g.receiver;
+        $('dm').textContent = g.message;
+        $('ds').textContent = g.sender;
+
+        if (g.audioUrl) {
+          $('fa').src = g.audioUrl;
+          $('audioWrapper').classList.remove('hidden');
+        }
+
+        $('greet').classList.remove('hidden');
+        $('greetingControls').classList.remove('hidden');
+        initFx();
+        greetingLoaded = true;
+
+        // Interactive Ignition Handler
+        const igniteHandler = () => {
+          if (isDiyaLit) return;
+          lightDiyaCeremony();
+        };
+
+        $('btnIgnite').onclick = igniteHandler;
+        $('diyaTarget').onclick = igniteHandler;
+
+        $('btnRelight').onclick = () => {
+          // Relight action
+          $('diyaTarget').classList.remove('is-lit');
+          document.body.classList.remove('is-lit');
+          $('ceremonyPrompt').classList.remove('hidden');
+          $('greetingContent').classList.remove('fade-up-active');
+          isDiyaLit = false;
+          setTimeout(() => {
+            lightDiyaCeremony();
+          }, 400);
+        };
+
+      } catch (e) {
+        document.body.innerHTML = '<p class="text-center mt-20 text-red-400">Failed to load greeting.</p>';
+      }
+    }
+
+    function lightDiyaCeremony() {
+      isDiyaLit = true;
+      initAudio();
+      playIgniteSound();
+
+      // Light the Diya visually
+      $('diyaTarget').classList.add('is-lit');
+      document.body.classList.add('is-lit');
+
+      // Hide prompt
+      $('ceremonyPrompt').classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        $('ceremonyPrompt').classList.add('hidden');
+      }, 700);
+
+      // Reveal Greeting Content with flourish
+      setTimeout(() => {
+        $('greetingContent').classList.add('fade-up-active');
+      }, 450);
+
+      // Celebration Fireworks Cascade
+      triggerCelebrationBurst();
+
+      // Start Ambient Sitar & Drone
+      setTimeout(() => {
+        startAmbientMusic();
+      }, 900);
+    }
+
+    function triggerCelebrationBurst() {
+      if (!window.burstFx) return;
+      const cv = $('cv');
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          const rx = cv.width * (0.2 + Math.random() * 0.6);
+          const ry = cv.height * (0.15 + Math.random() * 0.45);
+          window.burstFx(rx, ry);
+        }, i * 280);
+      }
+    }
+
+    /* ----------------------------------------------------
+       Fireworks Engine (Canvas + Web Audio)
+    ---------------------------------------------------- */
+    function initFx() {
+      const cv = $('cv'), c = cv.getContext('2d');
+      let P = [], run = false;
+
+      const size = () => {
+        cv.width = window.innerWidth;
+        cv.height = window.innerHeight;
+      };
+      size();
+      window.addEventListener('resize', size);
+
+      const burst = (x, y) => {
+        const h = Math.random() * 50 + 20; // Golden to festive orange hues
+        const count = 75;
+        playFireworkSound();
+
+        for (let i = 0; i < count; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const s = Math.random() * 5.5 + 1.2;
+          P.push({
+            x, y,
+            vx: Math.cos(a) * s,
+            vy: Math.sin(a) * s,
+            l: 1,
+            h: h + (Math.random() * 40 - 20)
+          });
+        }
+      };
+
+      window.burstFx = burst;
+
+      const loop = () => {
+        c.globalCompositeOperation = 'destination-out';
+        c.fillStyle = 'rgba(0,0,0,0.22)';
+        c.fillRect(0, 0, cv.width, cv.height);
+        c.globalCompositeOperation = 'lighter';
+
+        P = P.filter(p => p.l > 0);
+        P.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.045; // Gravity
+          p.vx *= 0.982; // Air resistance
+          p.l -= 0.013;  // Life decay
+
+          c.fillStyle = `hsla(${p.h}, 100%, 65%, ${p.l})`;
+          c.beginPath();
+          c.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
+          c.fill();
+        });
+
+        if (run && Math.random() < 0.065) {
+          burst(Math.random() * cv.width, Math.random() * cv.height * 0.55);
+        }
+        requestAnimationFrame(loop);
+      };
+      loop();
+
+      $('light').onclick = () => {
+        run = !run;
+        $('light').innerHTML = run ? '<span>✨</span> Dim the Sky' : '<span>🎆</span> Light the Sky';
+        if (run) {
+          triggerCelebrationBurst();
+        }
+      };
+
+      // Tap anywhere on screen to burst fireworks
+      window.addEventListener('click', e => {
+        if (!isDiyaLit) return;
+        const tag = e.target.tagName;
+        if (tag === 'BUTTON' || tag === 'A' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'AUDIO') return;
+        burst(e.clientX, e.clientY);
+      });
+    }
+  </script>
+</body>
+</html>
